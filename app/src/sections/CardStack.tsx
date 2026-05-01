@@ -80,8 +80,8 @@ const CardStack = () => {
       className="relative w-full bg-kaleo-sand"
       style={{ minHeight: `${(cards.length + 1) * 100}vh` }}
     >
-      {/* Section Header: Cambiado a relative para que en móvil no flote sobre las tarjetas */}
-      <div className="relative md:absolute top-0 left-0 right-0 py-12 md:py-16 text-center z-10">
+      {/* Encabezado Relativo */}
+      <div className="relative pt-24 pb-12 text-center z-10 bg-kaleo-sand">
         <h2 className="font-display text-headline text-kaleo-earth">
           {cardStackConfig.sectionTitle}
         </h2>
@@ -90,13 +90,13 @@ const CardStack = () => {
         </p>
       </div>
 
-      {/* Pinned Card Wrapper */}
+      {/* Contenedor del Slider */}
       <div
         ref={wrapperRef}
-        className="relative w-full h-screen flex items-center justify-center overflow-hidden"
+        className="relative w-full h-screen flex items-start md:items-center justify-center overflow-hidden pt-8 md:pt-0"
       >
-        {/* Cambiamos el aspect ratio dinámicamente: 4/5 en móvil para dar espacio al texto, 4/3 en PC */}
-        <div className="relative w-full max-w-4xl mx-auto px-6 md:px-8 aspect-[4/5] md:aspect-[4/3]">
+        {/* Cambio: max-w-5xl y aspect-[16/10] para dar más altura en PC */}
+        <div className="relative w-full max-w-5xl mx-auto px-6 md:px-8 aspect-[4/5] md:aspect-[16/10]">
           {cards.map((card, index) => (
             <div
               key={card.id}
@@ -107,37 +107,32 @@ const CardStack = () => {
                 zIndex: index,
               }}
             >
-              {/* Estructura de la tarjeta: Flex-col en móvil para separar imagen y texto */}
               <div className="relative flex flex-col overflow-hidden rounded-3xl shadow-deep bg-kaleo-cream h-full">
                 
-                {/* 1. Contenedor de Imagen: Mitad superior en móvil, pantalla completa en PC */}
-                <div className="relative h-1/2 md:absolute md:inset-0 overflow-hidden">
+                {/* 1. Contenedor de Imagen */}
+                <div className="relative h-1/2 md:h-full overflow-hidden">
                   <img
                     src={card.image}
                     alt={card.title}
                     className="w-full h-full object-cover"
                   />
-                  {/* Overlays originales de PC */}
-                  <div className="hidden md:block absolute inset-0 bg-gradient-to-t from-kaleo-charcoal/60 via-transparent to-transparent" />
-                  {/* Overlay móvil eliminado para que la imagen se vea limpia */}
+                  {/* Gradiente de PC mejorado para cubrir más espacio vertical si el texto es largo */}
+                  <div className="hidden md:block absolute inset-0 bg-gradient-to-t from-kaleo-charcoal/90 via-kaleo-charcoal/40 to-transparent" />
                 </div>
 
-                {/* 2. Contenedor de Texto: Debajo de la imagen en móvil, encima en PC */}
-                <div className="flex-1 md:absolute md:bottom-0 md:left-0 md:right-0 p-6 md:p-8 z-10 bg-kaleo-cream md:bg-transparent">
-                  <h3
-                    className="font-display text-2xl md:text-3xl text-kaleo-earth md:text-white mb-2"
-                    style={{ textShadow: window.innerWidth > 768 ? '0 2px 8px rgba(0,0,0,0.45)' : 'none' }}
-                  >
+                {/* 2. Contenedor de Texto */}
+                <div className="flex-1 p-6 md:absolute md:bottom-0 md:left-0 md:right-0 md:p-12 z-10 bg-kaleo-cream md:bg-transparent">
+                  <h3 className="font-display text-2xl md:text-4xl text-kaleo-earth md:text-white mb-3">
                     {card.title}
                   </h3>
-                  <p className="font-body text-sm text-kaleo-charcoal/80 md:text-white/80 leading-relaxed">
+                  <p className="font-body text-sm md:text-lg text-kaleo-charcoal/80 md:text-white/90 leading-relaxed max-w-3xl">
                     {card.description}
                   </p>
                 </div>
 
-                {/* 3. Número de Tarjeta: Estilos dinámicos para visibilidad */}
-                <div className="absolute top-4 right-4 w-8 h-8 rounded-full bg-kaleo-charcoal/10 md:bg-kaleo-cream/20 backdrop-blur-sm flex items-center justify-center z-10">
-                  <span className="font-body text-xs text-kaleo-charcoal md:text-white">
+                {/* 3. Número de Tarjeta */}
+                <div className="absolute top-4 right-4 w-10 h-10 rounded-full bg-kaleo-charcoal/10 md:bg-kaleo-cream/20 backdrop-blur-sm flex items-center justify-center z-10">
+                  <span className="font-body text-xs text-kaleo-charcoal md:text-white font-medium">
                     {String(index + 1).padStart(2, '0')}
                   </span>
                 </div>
@@ -147,8 +142,7 @@ const CardStack = () => {
         </div>
       </div>
 
-      {/* Bottom spacer */}
-      <div className="h-24" />
+      <div className="h-32 bg-kaleo-sand" />
     </section>
   );
 };
