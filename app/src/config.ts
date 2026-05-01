@@ -180,6 +180,7 @@ export interface FooterConfig {
   heading: string;
   description: string;
   ctaText: string;
+  ctaLink: string;
   contact: FooterContactItem[];
   locationLabel: string;
   address: string[];
