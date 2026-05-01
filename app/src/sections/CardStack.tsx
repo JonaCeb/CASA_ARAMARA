@@ -107,9 +107,9 @@ const CardStack = () => {
             scrollTrigger: {
               trigger: section,
               start: 'top top',
-              end: `+=${cards.length * 120}%`,
+              end: `+=${cards.length * 65}%`,
               pin: wrapper,
-              scrub: 1.1,
+              scrub: 0.6,
               anticipatePin: 1,
               invalidateOnRefresh: true,
               fastScrollEnd: true,
