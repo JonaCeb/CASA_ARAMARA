@@ -194,12 +194,14 @@ export const footerConfig: FooterConfig = {
   heading: "Bienvenida a la Vida",
   description: "En Casa Aramara creemos en el poder de las mujeres para parir y en la importancia de darle a los bebés una bienvenida llena de amor y respeto. Contáctanos para agendar tu consulta gratuita.",
   ctaText: "Agenda tu Consulta Gratuita",
+  // Añadiremos esta línea si tu componente la soporta, o la usaremos en el botón
+  ctaLink: "https://wa.me/523316057476?text=Hola,%20me%20gustaría%20agendar%20una%20consulta%20en%20Casa%20Aramara", 
   contact: [
     {
       type: "phone",
       label: "33 1605 7476",
       value: "33 1605 7476",
-      href: "tel:3316057476",
+      href: "https://wa.me/523316057476", // Ahora el teléfono también abre WhatsApp
     },
     {
       type: "email",
@@ -218,7 +220,7 @@ export const footerConfig: FooterConfig = {
   socials: [
     {
       platform: "facebook",
-      href: "https://facebook.com/casaaramara",
+      href: "https://www.facebook.com/casaaramaralaexperienciadeunpartonatural/?locale=es_LA", // URL corregida
     },
   ],
   logoText: "Casa Aramara",
