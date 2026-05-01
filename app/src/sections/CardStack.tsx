@@ -80,7 +80,7 @@ const CardStack = () => {
       className="relative w-full bg-kaleo-sand"
       style={{ minHeight: `${(cards.length + 1) * 100}vh` }}
     >
-      {/* Encabezado: Ahora es relativo para que no se encime con las tarjetas en móvil */}
+      {/* Encabezado Relativo */}
       <div className="relative pt-24 pb-12 text-center z-10 bg-kaleo-sand">
         <h2 className="font-display text-headline text-kaleo-earth">
           {cardStackConfig.sectionTitle}
@@ -95,8 +95,8 @@ const CardStack = () => {
         ref={wrapperRef}
         className="relative w-full h-screen flex items-start md:items-center justify-center overflow-hidden pt-8 md:pt-0"
       >
-        {/* Ajuste de aspecto: 4/5 para móvil (más alto para el texto separado) y 4/3 para desktop */}
-        <div className="relative w-full max-w-4xl mx-auto px-6 md:px-8 aspect-[4/5] md:aspect-[4/3]">
+        {/* Cambio: max-w-5xl y aspect-[16/10] para dar más altura en PC */}
+        <div className="relative w-full max-w-5xl mx-auto px-6 md:px-8 aspect-[4/5] md:aspect-[16/10]">
           {cards.map((card, index) => (
             <div
               key={card.id}
@@ -107,7 +107,6 @@ const CardStack = () => {
                 zIndex: index,
               }}
             >
-              {/* Card Structure: flex-col para separar imagen de texto en móvil */}
               <div className="relative flex flex-col overflow-hidden rounded-3xl shadow-deep bg-kaleo-cream h-full">
                 
                 {/* 1. Contenedor de Imagen */}
@@ -117,16 +116,16 @@ const CardStack = () => {
                     alt={card.title}
                     className="w-full h-full object-cover"
                   />
-                  {/* Overlay sutil solo para Desktop */}
-                  <div className="hidden md:block absolute inset-0 bg-gradient-to-t from-kaleo-charcoal/60 via-transparent to-transparent" />
+                  {/* Gradiente de PC mejorado para cubrir más espacio vertical si el texto es largo */}
+                  <div className="hidden md:block absolute inset-0 bg-gradient-to-t from-kaleo-charcoal/90 via-kaleo-charcoal/40 to-transparent" />
                 </div>
 
-                {/* 2. Contenedor de Texto: Sólido en móvil, transparente/encimado en desktop */}
-                <div className="flex-1 p-6 md:absolute md:bottom-0 md:left-0 md:right-0 md:p-10 z-10 bg-kaleo-cream md:bg-transparent">
+                {/* 2. Contenedor de Texto */}
+                <div className="flex-1 p-6 md:absolute md:bottom-0 md:left-0 md:right-0 md:p-12 z-10 bg-kaleo-cream md:bg-transparent">
                   <h3 className="font-display text-2xl md:text-4xl text-kaleo-earth md:text-white mb-3">
                     {card.title}
                   </h3>
-                  <p className="font-body text-sm md:text-base text-kaleo-charcoal/80 md:text-white/90 leading-relaxed max-w-2xl">
+                  <p className="font-body text-sm md:text-lg text-kaleo-charcoal/80 md:text-white/90 leading-relaxed max-w-3xl">
                     {card.description}
                   </p>
                 </div>
@@ -143,7 +142,6 @@ const CardStack = () => {
         </div>
       </div>
 
-      {/* Espaciador final para suavizar la salida del scroll */}
       <div className="h-32 bg-kaleo-sand" />
     </section>
   );
