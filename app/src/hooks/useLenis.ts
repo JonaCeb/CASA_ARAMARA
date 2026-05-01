@@ -17,7 +17,6 @@ const useLenis = () => {
       infinite: false,
       gestureOrientation: 'vertical',
       orientation: 'vertical',
-      normalizeWheel: true,
     });
 
     lenisRef.current = lenis;
