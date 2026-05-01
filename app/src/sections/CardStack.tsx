@@ -106,7 +106,7 @@ const CardStack = () => {
             },
             scrollTrigger: {
               trigger: section,
-              start: 'top top',
+             start:'top+=20 top',
               end: `+=${cards.length * 65}%`,
               pin: wrapper,
               scrub: 0.6,
@@ -190,33 +190,33 @@ const CardStack = () => {
       aria-labelledby="services-title"
       className="relative w-full overflow-hidden bg-kaleo-sand"
       style={{
-        minHeight: `${(cards.length + 1) * 100}vh`,
+        minHeight: `${(cards.length + 1) * 82}vh`,
       }}
     >
       {/* HEADER */}
-      <div className="relative z-20 bg-kaleo-sand px-6 pt-14 pb-8 md:pt-20 md:pb-10">
-        <div className="mx-auto max-w-6xl text-center">
-          <h2
-            id="services-title"
-            className="font-display text-headline text-kaleo-earth"
-          >
-            {cardStackConfig.sectionTitle}
-          </h2>
+     <div className="absolute top-0 left-0 right-0 z-30 px-6 pt-8 md:pt-10 pointer-events-none">
+  <div className="mx-auto max-w-6xl text-center">
+    <h2
+      id="services-title"
+      className="font-display text-headline text-kaleo-earth"
+    >
+      {cardStackConfig.sectionTitle}
+    </h2>
 
-          {cardStackConfig.sectionSubtitle ? (
-            <p className="mt-4 font-body text-xs uppercase tracking-[0.28em] text-kaleo-terracotta md:text-sm">
-              {cardStackConfig.sectionSubtitle}
-            </p>
-          ) : null}
-        </div>
-      </div>
+    {cardStackConfig.sectionSubtitle ? (
+      <p className="mt-3 font-body text-xs uppercase tracking-[0.28em] text-kaleo-terracotta md:text-sm">
+        {cardStackConfig.sectionSubtitle}
+      </p>
+    ) : null}
+  </div>
+</div>
 
       {/* STACK */}
       <div
         ref={wrapperRef}
-        className="relative flex h-screen w-full items-center justify-center overflow-hidden px-4 md:px-8"
+        className="relative flex min-h-screen w-full items-center justify-center overflow-hidden px-4 md:px-8"
       >
-        <div className="relative w-full max-w-6xl aspect-[4/5] md:aspect-[16/10]">
+        <div className="relative w-full max-w-6xl mt-8 md:mt-0 aspect-[4/5] md:aspect-[16/10]">
           {cards.map((card, index) => {
             const isActive = index === activeIndex;
             const loaded =
