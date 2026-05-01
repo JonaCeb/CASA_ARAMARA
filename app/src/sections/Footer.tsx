@@ -178,13 +178,20 @@ const Footer = () => {
                 {footerConfig.description}
               </p>
               {footerConfig.ctaText && (
-                <MagneticButton className="relative mt-8 px-8 py-4 border border-kaleo-cream/30 rounded-full font-body text-sm uppercase tracking-wider overflow-hidden transition-colors hover:border-kaleo-terracotta">
-                  <span className="flex items-center gap-2">
-                    {footerConfig.ctaText}
-                    <ArrowUpRight className="w-4 h-4" />
-                  </span>
-                </MagneticButton>
-              )}
+  <a 
+    href={footerConfig.ctaLink} 
+    target="_blank" 
+    rel="noopener noreferrer" 
+    className="inline-block mt-8"
+  >
+    <MagneticButton className="relative px-8 py-4 border border-kaleo-cream/30 rounded-full font-body text-sm uppercase tracking-wider overflow-hidden transition-colors hover:border-kaleo-terracotta">
+      <span className="flex items-center gap-2">
+        {footerConfig.ctaText}
+        <ArrowUpRight className="w-4 h-4" />
+      </span>
+    </MagneticButton>
+  </a>
+)}
             </div>
 
             {/* Right Column - Contact Grid */}
