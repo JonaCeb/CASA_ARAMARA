@@ -221,7 +221,7 @@ const CardStack = () => {
         ref={wrapperRef}
         className="relative flex min-h-screen w-full items-center justify-center overflow-hidden px-4 md:px-8"
       >
-        <div className="relative w-full max-w-6xl mt-8 md:mt-0 aspect-[4/5] md:aspect-[16/10]">
+       <div className="relative w-full max-w-6xl mt-8 md:mt-0 min-h-[640px] md:min-h-0 md:aspect-[16/10]">
           {cards.map((card, index) => {
             const isActive = index === activeIndex;
             const loaded =
