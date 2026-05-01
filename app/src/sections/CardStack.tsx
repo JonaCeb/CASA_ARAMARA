@@ -297,7 +297,7 @@ const CardStack = () => {
       </div>
 
       {/* BOTTOM SPACE */}
-      <div className="h-20 bg-kaleo-sand md:h-28" />
+      <div className="h-6 bg-kaleo-sand md:h-28" />
     </section>
   );
 };
