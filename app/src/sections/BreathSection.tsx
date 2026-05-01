@@ -119,7 +119,13 @@ const BreathSection = () => {
       </div>
 
       {/* Decorative elements */}
-      
+      {breathSectionConfig.description && (
+        <div className="max-w-4xl mx-auto px-6 md:px-8 mt-16 md:mt-24 text-center">
+          <p className="font-body text-lg text-kaleo-earth/80 max-w-2xl mx-auto leading-relaxed whitespace-pre-line">
+  {breathSectionConfig.description}
+</p>
+        </div>
+      )}
     </section>
   );
 };
