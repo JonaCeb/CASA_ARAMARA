@@ -3,6 +3,7 @@ import {
   useRef,
   useState,
   useMemo,
+  useCallback,
 } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
@@ -10,13 +11,13 @@ import { cardStackConfig } from '../config';
 
 gsap.registerPlugin(ScrollTrigger);
 
-type CardElement = HTMLDivElement | null;
+type CardElement = HTMLElement | null;
 
 const CardStack = () => {
-  const sectionRef = useRef<HTMLElement>(null);
-  const wrapperRef = useRef<HTMLDivElement>(null);
+  const sectionRef = useRef<HTMLElement | null>(null);
+  const wrapperRef = useRef<HTMLDivElement | null>(null);
   const cardsRef = useRef<CardElement[]>([]);
-  const imageLoadedRef = useRef<boolean[]>([]);
+  const loadedImagesRef = useRef<boolean[]>([]);
 
   const [activeIndex, setActiveIndex] = useState(0);
   const [, forceRender] = useState(0);
@@ -25,42 +26,52 @@ const CardStack = () => {
 
   cardsRef.current = [];
 
-  const setCardRef = (el: HTMLDivElement | null, index: number) => {
-    cardsRef.current[index] = el;
-  };
+  const setCardRef = useCallback(
+    (el: HTMLElement | null, index: number) => {
+      cardsRef.current[index] = el;
+    },
+    []
+  );
 
-  const handleImageLoad = (index: number) => {
-    imageLoadedRef.current[index] = true;
+  const handleImageLoad = useCallback((index: number) => {
+    loadedImagesRef.current[index] = true;
     forceRender((v) => v + 1);
-  };
+  }, []);
 
   useLayoutEffect(() => {
+    if (typeof window === 'undefined') return;
+
     const section = sectionRef.current;
     const wrapper = wrapperRef.current;
 
     if (!section || !wrapper || cards.length === 0) return;
 
     const ctx = gsap.context(() => {
-      const cardElements = cardsRef.current.filter(Boolean) as HTMLDivElement[];
+      const cardElements = cardsRef.current.filter(
+        Boolean
+      ) as HTMLElement[];
 
       if (!cardElements.length) return;
 
-      const mm = gsap.matchMedia();
+      const media = gsap.matchMedia();
 
-      mm.add(
+      media.add(
         {
           desktop: '(min-width: 768px)',
           mobile: '(max-width: 767px)',
-          reduced: '(prefers-reduced-motion: reduce)',
+          reduce: '(prefers-reduced-motion: reduce)',
         },
         (context) => {
-          const { reduced } = context.conditions as {
-            desktop: boolean;
-            mobile: boolean;
-            reduced: boolean;
+          const conditions = context.conditions as {
+            desktop?: boolean;
+            mobile?: boolean;
+            reduce?: boolean;
           };
 
-          if (reduced) {
+          const prefersReducedMotion =
+            conditions?.reduce === true;
+
+          if (prefersReducedMotion) {
             cardElements.forEach((card, i) => {
               gsap.set(card, {
                 clearProps: 'all',
@@ -69,6 +80,7 @@ const CardStack = () => {
                 scale: 1,
               });
             });
+
             return;
           }
 
@@ -78,7 +90,6 @@ const CardStack = () => {
             scale: 1,
             rotate: 0,
             force3D: true,
-            transformPerspective: 1200,
             willChange: 'transform, opacity',
           });
 
@@ -88,10 +99,10 @@ const CardStack = () => {
             rotate: cards[0]?.rotation || 0,
           });
 
-          const tl = gsap.timeline({
+          const timeline = gsap.timeline({
             defaults: {
-              ease: 'power3.out',
               duration: 1,
+              ease: 'power3.out',
             },
             scrollTrigger: {
               trigger: section,
@@ -101,13 +112,18 @@ const CardStack = () => {
               scrub: 1.1,
               anticipatePin: 1,
               invalidateOnRefresh: true,
+              fastScrollEnd: true,
               onUpdate: (self) => {
-                const index = Math.min(
+                const nextIndex = Math.min(
                   cards.length - 1,
-                  Math.round(self.progress * (cards.length - 1))
+                  Math.round(
+                    self.progress * (cards.length - 1)
+                  )
                 );
 
-                setActiveIndex((prev) => (prev !== index ? index : prev));
+                setActiveIndex((prev) =>
+                  prev !== nextIndex ? nextIndex : prev
+                );
               },
             },
           });
@@ -115,24 +131,23 @@ const CardStack = () => {
           cardElements.forEach((card, index) => {
             if (index === 0) return;
 
-            tl.to(
+            timeline.to(
               cardElements[index - 1],
               {
                 scale: 0.96,
                 opacity: 0.62,
-                filter: 'blur(2px)',
                 rotate:
-                  (cards[index - 1]?.rotation || 0) * 0.4,
+                  (cards[index - 1]?.rotation || 0) * 0.35,
               },
               index - 0.05
             );
 
-            tl.fromTo(
+            timeline.fromTo(
               card,
               {
                 yPercent: 115,
                 opacity: 0,
-                scale: 1.06,
+                scale: 1.04,
                 rotate: cards[index]?.rotation || 0,
               },
               {
@@ -146,17 +161,24 @@ const CardStack = () => {
           });
 
           return () => {
-            tl.kill();
+            timeline.kill();
           };
         }
       );
 
       return () => {
-        mm.kill();
+        media.kill();
       };
     }, section);
 
-    return () => ctx.revert();
+    const refreshTimer = window.setTimeout(() => {
+      ScrollTrigger.refresh();
+    }, 250);
+
+    return () => {
+      window.clearTimeout(refreshTimer);
+      ctx.revert();
+    };
   }, [cards]);
 
   if (!cards.length) return null;
@@ -166,14 +188,14 @@ const CardStack = () => {
       ref={sectionRef}
       id="servicios"
       aria-labelledby="services-title"
-      className="relative w-full bg-kaleo-sand overflow-hidden"
+      className="relative w-full overflow-hidden bg-kaleo-sand"
       style={{
         minHeight: `${(cards.length + 1) * 100}vh`,
       }}
     >
       {/* HEADER */}
-      <div className="relative z-20 bg-kaleo-sand pt-14 md:pt-20 pb-8 md:pb-10 px-6">
-        <div className="max-w-6xl mx-auto text-center">
+      <div className="relative z-20 bg-kaleo-sand px-6 pt-14 pb-8 md:pt-20 md:pb-10">
+        <div className="mx-auto max-w-6xl text-center">
           <h2
             id="services-title"
             className="font-display text-headline text-kaleo-earth"
@@ -181,23 +203,24 @@ const CardStack = () => {
             {cardStackConfig.sectionTitle}
           </h2>
 
-          {cardStackConfig.sectionSubtitle && (
-            <p className="mt-4 font-body text-xs md:text-sm uppercase tracking-[0.28em] text-kaleo-terracotta">
+          {cardStackConfig.sectionSubtitle ? (
+            <p className="mt-4 font-body text-xs uppercase tracking-[0.28em] text-kaleo-terracotta md:text-sm">
               {cardStackConfig.sectionSubtitle}
             </p>
-          )}
+          ) : null}
         </div>
       </div>
 
       {/* STACK */}
       <div
         ref={wrapperRef}
-        className="relative h-screen w-full flex items-center justify-center overflow-hidden px-4 md:px-8"
+        className="relative flex h-screen w-full items-center justify-center overflow-hidden px-4 md:px-8"
       >
         <div className="relative w-full max-w-6xl aspect-[4/5] md:aspect-[16/10]">
           {cards.map((card, index) => {
             const isActive = index === activeIndex;
-            const isLoaded = imageLoadedRef.current[index];
+            const loaded =
+              loadedImagesRef.current[index] === true;
 
             return (
               <article
@@ -213,55 +236,59 @@ const CardStack = () => {
                   zIndex: index + 1,
                 }}
               >
-                <div className="relative h-full overflow-hidden rounded-[2rem] bg-kaleo-cream shadow-deep border border-white/20">
+                <div className="relative h-full overflow-hidden rounded-[2rem] border border-white/20 bg-kaleo-cream shadow-deep">
                   {/* IMAGE */}
-                  <div className="relative h-1/2 md:h-full overflow-hidden">
-                    {!isLoaded && (
+                  <div className="relative h-1/2 overflow-hidden md:h-full">
+                    {!loaded ? (
                       <div className="absolute inset-0 animate-pulse bg-kaleo-earth/10" />
-                    )}
+                    ) : null}
 
                     <img
                       src={card.image}
                       alt={card.title}
-                      loading={index === 0 ? 'eager' : 'lazy'}
-                      decoding="async"
-                      fetchPriority={
-                        index === 0 ? 'high' : 'low'
+                      loading={
+                        index === 0 ? 'eager' : 'lazy'
                       }
-                      onLoad={() => handleImageLoad(index)}
+                      decoding="async"
+                      onLoad={() =>
+                        handleImageLoad(index)
+                      }
                       className={`h-full w-full object-cover transition-all duration-700 ${
-                        isLoaded
-                          ? 'opacity-100 scale-100'
-                          : 'opacity-0 scale-105'
+                        loaded
+                          ? 'scale-100 opacity-100'
+                          : 'scale-105 opacity-0'
                       }`}
                     />
 
-                    {/* Desktop Overlay */}
-                    <div className="hidden md:block absolute inset-0 bg-gradient-to-t from-kaleo-charcoal/95 via-kaleo-charcoal/40 to-transparent" />
+                    {/* Desktop overlay */}
+                    <div className="absolute inset-0 hidden bg-gradient-to-t from-kaleo-charcoal/95 via-kaleo-charcoal/40 to-transparent md:block" />
                   </div>
 
                   {/* CONTENT */}
-                  <div className="relative md:absolute md:bottom-0 md:left-0 md:right-0 z-10 flex flex-col justify-end p-6 md:p-12 bg-kaleo-cream md:bg-transparent">
-                    <h3 className="font-display text-2xl md:text-5xl text-kaleo-earth md:text-white leading-tight">
+                  <div className="relative z-10 flex flex-col justify-end bg-kaleo-cream p-6 md:absolute md:bottom-0 md:left-0 md:right-0 md:bg-transparent md:p-12">
+                    <h3 className="font-display text-2xl leading-tight text-kaleo-earth md:text-5xl md:text-white">
                       {card.title}
                     </h3>
 
-                    <p className="mt-3 md:mt-5 max-w-3xl font-body text-sm md:text-lg leading-relaxed text-kaleo-charcoal/80 md:text-white/90">
+                    <p className="mt-3 max-w-3xl font-body text-sm leading-relaxed text-kaleo-charcoal/80 md:mt-5 md:text-lg md:text-white/90">
                       {card.description}
                     </p>
                   </div>
 
                   {/* COUNTER */}
-                  <div className="absolute top-4 right-4 md:top-6 md:right-6 z-20 flex h-11 w-11 items-center justify-center rounded-full border border-white/20 bg-kaleo-charcoal/10 backdrop-blur-md md:bg-white/15">
+                  <div className="absolute top-4 right-4 z-20 flex h-11 w-11 items-center justify-center rounded-full border border-white/20 bg-kaleo-charcoal/10 backdrop-blur-md md:top-6 md:right-6 md:bg-white/15">
                     <span className="font-body text-xs font-medium text-kaleo-charcoal md:text-white">
-                      {String(index + 1).padStart(2, '0')}
+                      {String(index + 1).padStart(
+                        2,
+                        '0'
+                      )}
                     </span>
                   </div>
 
-                  {/* ACTIVE GLOW */}
-                  {isActive && (
+                  {/* ACTIVE RING */}
+                  {isActive ? (
                     <div className="pointer-events-none absolute inset-0 rounded-[2rem] ring-1 ring-white/20" />
-                  )}
+                  ) : null}
                 </div>
               </article>
             );
@@ -269,8 +296,8 @@ const CardStack = () => {
         </div>
       </div>
 
-      {/* FOOTER SPACE */}
-      <div className="h-20 md:h-28 bg-kaleo-sand" />
+      {/* BOTTOM SPACE */}
+      <div className="h-20 bg-kaleo-sand md:h-28" />
     </section>
   );
 };
