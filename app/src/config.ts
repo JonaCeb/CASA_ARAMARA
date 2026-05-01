@@ -224,7 +224,7 @@ export const footerConfig: FooterConfig = {
     },
   ],
   logoText: "Casa Aramara",
-  copyright: "© 2024 Casa Aramara. Todos los derechos reservados.",
+  copyright: "© 2026 Casa Aramara. Todos los derechos reservados.",
   links: [
     { label: "Inicio", href: "#inicio" },
     { label: "Nosotras", href: "#nosotras" },
