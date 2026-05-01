@@ -107,7 +107,9 @@ const CardStack = () => {
             scrollTrigger: {
               trigger: section,
              start:'top+=20 top',
-              end: `+=${cards.length * 65}%`,
+              end: window.innerWidth < 768
+    ? `+=${cards.length * 42}%`
+    : `+=${cards.length * 65}%`,
               pin: wrapper,
               scrub: 0.6,
               anticipatePin: 1,
@@ -190,8 +192,11 @@ const CardStack = () => {
       aria-labelledby="services-title"
       className="relative w-full overflow-hidden bg-kaleo-sand"
       style={{
-        minHeight: `${(cards.length + 1) * 82}vh`,
-      }}
+  minHeight:
+    typeof window !== 'undefined' && window.innerWidth < 768
+      ? `${cards.length * 58}vh`
+      : `${(cards.length + 1) * 82}vh`,
+}}
     >
       {/* HEADER */}
      <div className="absolute top-0 left-0 right-0 z-30 px-6 pt-8 md:pt-10 pointer-events-none">
