@@ -53,7 +53,11 @@ export const breathSectionConfig: BreathSectionConfig = {
   backgroundAlt: "Pareja en tina de parto, ambiente sereno y acogedor",
   title: "Acerca de Nosotras",
   subtitle: "NUESTRA ESENCIA",
-  description: "Misión: Ser una opción para las mujeres que buscan parir fuera del ambiente hospitalario, recibiendo una atención centrada en ellas y sus necesidades. Visión: Lograr que cada vez más mujeres y familias estén bien informadas sobre las opciones que tienen para parir, así como que el parto en casa, atendido por parteras, sea reconocido y aceptado socialmente como una opción segura. El equipo de Casa Aramara está integrado por parteras profesionales, convencidas de la capacidad que tenemos las mujeres para parir y de la importancia de darle a los bebés una bienvenida llena de amor y respeto.",
+  description: `Misión: Ser una opción para las mujeres que buscan parir fuera del ambiente hospitalario, recibiendo una atención centrada en ellas y sus necesidades.
+
+Visión: Lograr que cada vez más mujeres y familias estén bien informadas sobre las opciones que tienen para parir, así como que el parto en casa, atendido por parteras, sea reconocido y aceptado socialmente como una opción segura.
+
+El equipo de Casa Aramara está integrado por parteras profesionales, convencidas de la capacidad que tenemos las mujeres para parir y de la importancia de darle a los bebés una bienvenida llena de amor y respeto.`,
 };
 
 // Card Stack Section - Servicios Principales
